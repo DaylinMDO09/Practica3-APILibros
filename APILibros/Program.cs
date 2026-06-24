@@ -1,4 +1,11 @@
+using APILibros.Modelos;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Entity;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BaseDeDatos")));
 
 // Add services to the container.
 
