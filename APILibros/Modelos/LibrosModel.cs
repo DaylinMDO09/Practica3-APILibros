@@ -19,15 +19,15 @@ namespace APILibros.Modelos
 
         [Required]
         public DateTime AnioPublicacion { get; set; } = DateTime.MinValue;
-
+        [Required]
         [MaxLength(10)]
         public string? Genero { get; set; }
-
+        [Required]
         public int? NumeroPaginas { get; set; }
 
         [Required]
         public Decimal Precio { get; set; } = 0.0m;
-        [Required]
+        
         public bool Disponibilidad { get; set; } = true;
     }
 }
