@@ -32,6 +32,15 @@ namespace APILibros.Controllers
             }
             return Ok(libro);
         }
+        [HttpGet("ObtenerLibrosPorPaginas")]
+        public async Task<IActionResult> ObtenerLibrosPorPaginas(int pagina, int tamanioPagina)
+        {
+            var libros = await _context.Libros
+                .Skip((pagina - 1) * tamanioPagina)
+                .Take(tamanioPagina)
+                .ToListAsync();
+            return Ok(libros);
+        }
         [HttpPost("AgregarLibro")]
         public async Task<IActionResult> AgregarLibro([FromBody] LibrosModel libro)
         {
