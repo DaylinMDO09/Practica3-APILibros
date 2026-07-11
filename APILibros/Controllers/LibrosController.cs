@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APILibros.Modelos;
+using APILibros.Key;
+using Microsoft.EntityFrameworkCore;
 
 namespace APILibros.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ApiKey]
     public class LibrosController : Controller
     {
         private readonly AppDbContext _context;
@@ -14,15 +17,15 @@ namespace APILibros.Controllers
             _context = context;
         }
         [HttpGet("ObtenerLibros")]
-        public IActionResult ObtenerLibros()
+        public async Task<IActionResult> ObtenerLibros()
         {
-            var libros = _context.Libros.ToList();
+            var libros = await _context.Libros.ToListAsync();
             return Ok(libros);
         }
         [HttpGet("ObtenerLibroPorId/{id}")]
-        public IActionResult ObtenerLibroPorId(int id)
+        public async Task<IActionResult> ObtenerLibroPorId(int id)
         {
-            var libro = _context.Libros.FirstOrDefault(l => l.IdLibro == id);
+            var libro = await _context.Libros.FirstOrDefaultAsync(l => l.IdLibro == id);
             if (libro == null)
             {
                 return NotFound();
@@ -30,20 +33,20 @@ namespace APILibros.Controllers
             return Ok(libro);
         }
         [HttpPost("AgregarLibro")]
-        public IActionResult AgregarLibro([FromBody] LibrosModel libro)
+        public async Task<IActionResult> AgregarLibro([FromBody] LibrosModel libro)
         {
             if (libro == null)
             {
                 return BadRequest();
             }
             _context.Libros.Add(libro);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(ObtenerLibroPorId), new { id = libro.IdLibro }, libro);
         }
         [HttpPut("ActualizarLibro/{id}")]
-        public IActionResult ActualizarLibro(int id, [FromBody] LibrosModel libroActualizado)
+        public async Task<IActionResult> ActualizarLibro(int id, [FromBody] LibrosModel libroActualizado)
         {
-            var libroExistente = _context.Libros.FirstOrDefault(l => l.IdLibro == id);
+            var libroExistente = await _context.Libros.FirstOrDefaultAsync(l => l.IdLibro == id);
             if (libroExistente == null)
             {
                 return NotFound();
@@ -55,19 +58,19 @@ namespace APILibros.Controllers
             libroExistente.NumeroPaginas = libroActualizado.NumeroPaginas;
             libroExistente.Precio = libroActualizado.Precio;
             libroExistente.Disponibilidad = libroActualizado.Disponibilidad;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return NoContent();
         }
         [HttpDelete("EliminarLibro/{id}")]
-        public IActionResult EliminarLibro(int id)
+        public async Task<IActionResult> EliminarLibro(int id)
         {
-            var libroExistente = _context.Libros.FirstOrDefault(l => l.IdLibro == id);
+            var libroExistente = await _context.Libros.FirstOrDefaultAsync(l => l.IdLibro == id);
             if (libroExistente == null)
             {
                 return NotFound();
             }
             _context.Libros.Remove(libroExistente);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
