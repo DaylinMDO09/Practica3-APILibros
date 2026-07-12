@@ -10,5 +10,7 @@ namespace APILibros.Modelos
         {
         }
         public DbSet<LibrosModel> Libros { get; set; }
+
+        public DbSet<AutorModel> Autor { get; set; }
     }
 }

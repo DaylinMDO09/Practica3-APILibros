@@ -61,7 +61,7 @@ namespace APILibros.Controllers
                 return NotFound();
             }
             libroExistente.Titulo = libroActualizado.Titulo;
-            libroExistente.Autor = libroActualizado.Autor;
+            libroExistente.IdAutor = libroActualizado.IdAutor;
             libroExistente.AnioPublicacion = libroActualizado.AnioPublicacion;
             libroExistente.Genero = libroActualizado.Genero;
             libroExistente.NumeroPaginas = libroActualizado.NumeroPaginas;

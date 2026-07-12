@@ -10,22 +10,26 @@ namespace APILibros.Modelos
         public int IdLibro { get; set; }
 
         [Required]
-        [MaxLength(200)]
+        [StringLength(200, MinimumLength = 1)]
         public string? Titulo { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        public string? Autor { get; set; }
+        [ForeignKey("IdAutor")]
+        [Range(1, int.MaxValue)]
+        public int IdAutor { get; set; }
 
         [Required]
-        public DateTime AnioPublicacion { get; set; } = DateTime.MinValue;
+        [Range(1900, 2100)]
+        public int AnioPublicacion { get; set; }
         [Required]
-        [MaxLength(10)]
+        [StringLength(50, MinimumLength = 1)]
         public string? Genero { get; set; }
         [Required]
+        [Range(1, int.MaxValue)]
         public int? NumeroPaginas { get; set; }
 
         [Required]
+        [Range(0.0, double.MaxValue)]
         public Decimal Precio { get; set; } = 0.0m;
         
         public bool Disponibilidad { get; set; } = true;
