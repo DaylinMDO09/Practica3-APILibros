@@ -57,6 +57,47 @@ namespace APILibros.Controllers
             return Ok(libros);
         }
 
+        [HttpGet("paginado")]
+        public async Task<IActionResult> ObtenerAutoresPaginados(int pagina = 1,int tamanoPagina = 10,string? buscar = null,string? ordenarPor = "AnioNacimiento",string direccion = "asc")
+        {
+            if (pagina <= 0 || tamanoPagina <= 0)
+            {
+                return BadRequest(new { msg = "Los parámetros de paginación deben ser mayores a cero." });
+            }
+
+            var query = _context.Autor.AsNoTracking().AsQueryable();
+
+            // 🔎 Filtro por búsqueda parcial en nombre
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                query = query.Where(a => a.Nombre.Contains(buscar));
+            }
+
+            // 📑 Orden dinámico
+            query = direccion.ToLower() == "desc"
+                ? query.OrderByDescending(e => EF.Property<object>(e, ordenarPor))
+                : query.OrderBy(e => EF.Property<object>(e, ordenarPor));
+
+            // 📌 Paginación
+            var totalRegistros = await query.CountAsync();
+            var autores = await query
+                .Skip((pagina - 1) * tamanoPagina)
+                .Take(tamanoPagina)
+                .ToListAsync();
+
+            var resultado = new
+            {
+                pagina,
+                tamanoPagina,
+                totalRegistros,
+                totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamanoPagina),
+                datos = autores
+            };
+
+            return Ok(resultado);
+        }
+
+
         [HttpPost("AgregarAutor")]
         public async Task<IActionResult> AgregarAutor([FromBody] AutorModel autor)
         {
