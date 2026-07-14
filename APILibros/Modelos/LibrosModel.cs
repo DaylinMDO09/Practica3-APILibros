@@ -14,7 +14,6 @@ namespace APILibros.Modelos
         public string? Titulo { get; set; }
 
         [Required]
-        [ForeignKey("IdAutor")]
         [Range(1, int.MaxValue)]
         public int IdAutor { get; set; }
 
