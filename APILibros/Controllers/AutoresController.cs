@@ -67,18 +67,15 @@ namespace APILibros.Controllers
 
             var query = _context.Autor.AsNoTracking().AsQueryable();
 
-            // 🔎 Filtro por búsqueda parcial en nombre
             if (!string.IsNullOrEmpty(buscar))
             {
                 query = query.Where(a => a.Nombre.Contains(buscar));
             }
 
-            // 📑 Orden dinámico
             query = direccion.ToLower() == "desc"
                 ? query.OrderByDescending(e => EF.Property<object>(e, ordenarPor))
                 : query.OrderBy(e => EF.Property<object>(e, ordenarPor));
 
-            // 📌 Paginación
             var totalRegistros = await query.CountAsync();
             var autores = await query
                 .Skip((pagina - 1) * tamanoPagina)
